@@ -7,7 +7,7 @@ function setup() {
   createCanvas(600, 600);
   controls = new Controls();
   center = createVector(height/2, width/2)
-  p = new ArrowParticle(center);
+  p = new Particle(center);
 }
 
 function draw() {
