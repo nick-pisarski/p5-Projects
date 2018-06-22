@@ -1,32 +1,48 @@
+//forces
+let gravity, wind;
 
-let entity, gravity, wind, drag, friction;
+//actions
+let jump;
+
+//entities
 let entities = [];
-let numEntities = 3
+
+//config
+let numEntities = 1
+
 function setup() { 
-    createCanvas(400, 400);
-    // entity = new Entity(width/2, height/2);
+    createCanvas(600, 600);
+    
+    entity = new Entity(width/2, height);
     gravity = createVector(0, 0.0001);
     wind = createVector(0.0001, 0.0001);
-    drag = createVector(0.1, 0.1)
+    jump = createVector(0, -0.005);
     
-    for(let i = 0; i < numEntities; i++){
-      entities.push(new Entity(random(width-2), 0, random(20, 60), {stroke: color(random(255), random(255), random(255))}))
-    }
+    createEntities();   
   } 
   
-function draw() { 
-  background(0);
+  function draw() { 
+    background(0);
 
-  for(let i = 0; i < numEntities; i++){
-    entities[i].applyForce(gravity);
+    updateEntities((entity) => {
+      entity.applyForce(gravity);  
+      if(mouseIsPressed){
+          entity.applyForce(jump);
+        }
+    })
+  }
 
-    if(mouseIsPressed){
-      entities[i].applyForce(wind)
+function createEntities(){
+   for(let i = 0; i < numEntities; i++){
+      entities.push(new Entity(random(width-2), 0, random(20, 60), {stroke: color(random(255), random(255), random(255))}))
     }
+}
+
+function updateEntities(callback) {
+   for(let i = 0; i < numEntities; i++){
+     try {
+       callback(entities[i]);
+     } catch (error){}
     entities[i].update();
   }
 }
-
-// function mousePressed(){
-//   entity.applyForce(wind);
-// }
