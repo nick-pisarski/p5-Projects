@@ -5,8 +5,8 @@ class Entity{
         this.acceleration = createVector(0,0);
         this.mass = mass;
         
-        this.coDrag = 1-0.001;
-        this.coFriction = 1-0.001;
+        // this.coDrag = 1-0.001;
+        // this.coFriction = 1-0.001;
 
         this.strokeColor = options.stroke || color(200, 0, 0);
         this.strokeWidth = options.strokeWeight || 1;
@@ -45,13 +45,13 @@ class Entity{
     update(){
         const force = this.acceleration.copy().mult(this.mass)
         this.velocity.add(force);
-        this.velocity.mult(this.coDrag);
-        this.velocity.mult(this.coFriction);
         this.position.add(this.velocity);
         this.checkBoundary();
         this.render();
         this.acceleration.mult(0);
+        this.render();
     }
+    
 
     showForceDirection(){
         const force = this.position.copy().add(this.velocity.copy()).sub(this.position.copy());
