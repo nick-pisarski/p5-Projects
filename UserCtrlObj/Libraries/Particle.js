@@ -1,7 +1,7 @@
 class Particle{
     constructor(position, options = {}){
         this.acceleration = 0.025
-        this.friction = 0.01;
+        this.coFriction = -0.01;
         this.velocity = createVector(0, 0);
         this.position = position.copy();
 
@@ -12,8 +12,11 @@ class Particle{
 
     update(keys){
         const acceleration = keys.mult(this.acceleration);
+        const friction = this.velocity.copy();
+        friction.mult(this.coFriction); 
+        acceleration.add(friction);
         this.velocity.add(acceleration);
-        this.velocity.mult(1 - this.friction)
+        
         this.position.add(this.velocity);
         this.checkBoundary();
         this.render();
@@ -27,16 +30,22 @@ class Particle{
 
     checkBoundary(){
         if(this.position.x < 0){
-            this.position.x = width;
+            this.position.x = 0;
+            this.velocity.mult(-1);
         }
         if(this.position.x > width){
-            this.position.x = 0;
+            this.position.x = width;
+            this.velocity.mult(-1);
+
         }
         if(this.position.y < 0){
-            this.position.y = height;
+            this.position.y = 0;
+            this.velocity.mult(-1);
+
         }
         if(this.position.y > height){
-            this.position.y = 0;
+            this.velocity.mult(-1);
+            this.position.y = height;
         }
     }
 
