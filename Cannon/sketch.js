@@ -48,6 +48,7 @@ function setup() {
         text('RELOAD',25,50)
       }
   }
+  
   function createEntities(){
     for(let i = 0; i < numEntities; i++){
         entities.push(new Bomb(0, height, 50, {stroke: color(random(255), random(255), random(255))}))
