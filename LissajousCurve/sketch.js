@@ -1,5 +1,5 @@
 
-let shapes = []; //shapes[row][col]
+let shapes = [];
 let angle = 0;
 const speed = 0.02;
 let w = 120;
@@ -13,7 +13,7 @@ function setup() {
   cols = floor(width / w) - 1;
   rows = floor(height / w) - 1; 
 
-  buildShapesArray()
+  buildShapesArray(3)
 }
 
 function draw() {
@@ -49,22 +49,8 @@ function draw() {
 
   }
 
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      shapes[i][j].addPoint();
-      shapes[i][j].draw();
-    }
-  }
+  drawShapes();
 
-  angle -= speed;
-
-  if (angle < -TWO_PI) {
-    for (let j = 0; j < rows; j++) {
-      for (let i = 0; i < cols; i++) {
-        shapes[j][i].reset();
-      }
-    }
-    angle = 0;
-  }
+  updateAngle(); 
 
 }

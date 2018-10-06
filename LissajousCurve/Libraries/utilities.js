@@ -18,12 +18,11 @@ function drawCircle(x, y, d) {
     line(x1, y1, x2, y2);
   }
   
-  function buildShapesArray(){
-    //build shapes
+  function buildShapesArray(strokeWeight){
     for (let i = 0; i < rows; i++) {
       shapes[i] = [];
       for (let j = 0; j < cols; j++) {
-        shapes[i][j] = new Curve(3);
+        shapes[i][j] = new Curve(strokeWeight);
       }
     }
   }
@@ -33,4 +32,26 @@ function drawCircle(x, y, d) {
       x: x + r * cos(angle * (i + 1) - HALF_PI),
       y: y + r * sin(angle * (i + 1) - HALF_PI)
     } 
+  }
+
+  function updateAngle(){
+    angle -= speed;
+  
+    if (angle < -TWO_PI) {
+      for (let j = 0; j < rows; j++) {
+        for (let i = 0; i < cols; i++) {
+          shapes[j][i].reset();
+        }
+      }
+      angle = 0;
+    }
+  }
+
+  function drawShapes(){
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          shapes[i][j].addPoint();
+          shapes[i][j].draw();
+        }
+      }
   }
