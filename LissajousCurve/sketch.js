@@ -10,7 +10,6 @@ let rows;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  fullscreen()
   cols = floor(width / w) - 1;
   rows = floor(height / w) - 1; 
 
@@ -30,7 +29,6 @@ function draw() {
     p = getCirclePoint(cx, cy, r, j);
     drawCircle(cx, cy, d);
     drawPoint(p.x, p.y)
-    // drawLine(p.x, 0, p.x, height);
 
     for (let i = 0; i < rows; i++) {
       shapes[i][j].setX(p.x);
@@ -66,7 +64,6 @@ function draw() {
         shapes[j][i].reset();
       }
     }
-    // saveFrames("lissajous#####.png");
     angle = 0;
   }
 
