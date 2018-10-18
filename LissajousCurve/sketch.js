@@ -1,7 +1,7 @@
 
 let shapes = [];
 let angle = 0;
-const speed = 0.02;
+const speed = 0.01;
 let w = 120;
 let padding = 0.1;
 let cols;
@@ -19,6 +19,23 @@ function setup() {
 function draw() {
   background(0);
 
+  LissajousCircle();
+  // const x  = width / 2;
+  // const y = height / 2;
+  // const size = 300;
+  // const p = getSquarePoint( x, y, size);
+  // drawPoint(x, y);
+  // drawSquare(x, y, size);
+  // drawPoint(p.x, p.y);
+
+  // drawLine(x,y,p.x,p.y)
+  // // console.log(p)
+
+  // updateAngle();
+
+}
+
+function LissajousCircle(){
   let d = w - (padding * w);
   let r = d / 2;
 
@@ -52,5 +69,4 @@ function draw() {
   drawShapes();
 
   updateAngle(); 
-
 }
