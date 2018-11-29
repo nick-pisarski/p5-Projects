@@ -10,6 +10,7 @@ Some random fun projects using th [P5.js](https://p5js.org/) library
     - [PhysicsObjects](#physicsobjects)
     - [UserCtrlObject](#userctrlobject)
     - [Lissajous Curve Table](#lissajous-curve-table)
+    - [Chaos Game](#chaos-game)
 
 ## Cannon
 
@@ -17,7 +18,7 @@ A project to create a cannon to shoot projectiles
 
 ## DroppingBalls
 
-Created Ball objects that are affect by pyhics
+Created Ball objects that are affect by physics
 
 ## EmptyProject
 
@@ -38,3 +39,7 @@ Project to create a objects that are controlled by the user and affected by phys
 ## Lissajous Curve Table
 
 A creation of the [Lissajous Curve](https://en.wikipedia.org/wiki/Lissajous_curve) Table
+
+## Chaos Game
+
+Creation of the [Chaos Game](https://en.wikipedia.org/wiki/Chaos_game). Need to add HTML elements to control various aspects.
