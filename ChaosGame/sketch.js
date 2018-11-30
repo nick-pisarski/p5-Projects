@@ -3,17 +3,18 @@ const HEIGHT = 800;
 const WIDTH = HEIGHT;
 
 // config
+const DISPLAY_SEED_PTS = false;
 let MAX_FRAMES = 500;
-let CYCLES_PER_FRAME = 200;
+let CYCLES_PER_FRAME = 500;
 let LERP_FACTOR = 0.5;
-let SHAPE_SIDES = 8;
+let SHAPE_SIDES = 5;
+let POINT_SIZE  = 1;
 
 let cycle = 0;
 const seedPoints = [];
 let rx, ry;
 let shape;
 let lastR;
-let secLastR;
 
 
 function setup() {
@@ -38,10 +39,9 @@ function draw() {
   for (let i = 0; i < CYCLES_PER_FRAME; i++) {
 
     let r = floor(random(seedPoints.length));
-    while(r == lastR || r == secLastR){
+    while(r == lastR){
       r = floor(random(seedPoints.length));
     }
-    secLastR = lastR;
     lastR = r;    
 
     const p = seedPoints[r];
@@ -57,15 +57,19 @@ function draw() {
 function createPoints(shape){  
   background(0);
   stroke(255);
-  strokeWeight(3);
+  strokeWeight(POINT_SIZE);
 
   for (let i = 0; i < shape.length; i++) {
     const x = shape[i].x;
     const y = shape[i].y;
     const c = color(random(255), random(255), random(255));
+    // const c = color(255, 255, 255);
     seedPoints[i] = {x, y, c}
-    strokeWeight(c); 
-    point(x, y);
+    if (DISPLAY_SEED_PTS) {
+      strokeWeight(c);
+      point(x, y);
+    }
+
   }
   rx = random(width);
   ry = random(height);     
