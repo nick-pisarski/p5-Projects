@@ -4,7 +4,7 @@
 // https://youtu.be/mhjuuHl6qHM
 
 class Boid {
-  constructor( maxForce = 0.3, maxSpeed = 5 ) {
+  constructor( maxForce = 0.1, maxSpeed = 2 ) {
     this.position = createVector( random( width ), random( height ) );
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag( random( -4, 4 ) );
@@ -115,7 +115,7 @@ class Boid {
 
   render() {
     //figure out r better
-    const r = perceptionRange / 8;
+    const r = 8;
     const theta = this.velocity.heading() + radians( 90 );
 
     fill( 200, 100 );
@@ -153,9 +153,15 @@ class Boid {
   }
 
   getNeighborBoids( boids ) {
-    return boids.filter( boid => {
+    // create a range
+    const range = new Circle( this.position.x, this.position.y, perceptionRange );
+    const neighbors = boidTree.query( range ).filter( boid => this !== boid );
+
+    const bs = boids.filter( boid => {
       return this.isDifferentBoid( boid ) && this.isInRange( boid );
     } );
+
+    return bs;
   }
 
   isDifferentBoid( boid ) {
