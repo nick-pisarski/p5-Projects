@@ -4,125 +4,169 @@
 // https://youtu.be/mhjuuHl6qHM
 
 class Boid {
-  constructor() {
-    this.position = createVector(random(width), random(height));
+  constructor( maxForce = 0.3, maxSpeed = 5 ) {
+    this.position = createVector( random( width ), random( height ) );
     this.velocity = p5.Vector.random2D();
-    this.velocity.setMag(random(2, 4));
+    this.velocity.setMag( random( -4, 4 ) );
     this.acceleration = createVector();
-    // configurations
-    this.maxForce = 0.3;
-    this.maxSpeed = 5;
+    // configurationss
+    this.maxForce = maxForce;
+    this.maxSpeed = maxSpeed;
   }
 
-  align(boids) {
+  // Alignment
+  align( boids ) {
     let steering = createVector();
-    for (let other of boids) {
-      steering.add(other.velocity);
-    }
-    if (boids.length > 0) {
-      steering.div(boids.length);
-      steering.setMag(this.maxSpeed);
-      steering.sub(this.velocity);
-      steering.limit(this.maxForce);
-    }
 
-    return steering.mult(alignSlider.value());
+    if ( !boids || !boids.length ) return steering;
+
+    for ( let other of boids ) {
+      steering.add( other.velocity );
+    }
+    steering.div( boids.length );
+
+    steering.setMag( this.maxSpeed );
+    steering.sub( this.velocity );
+    steering.limit( this.maxForce );
+
+    return steering.mult( alignSlider.value() );
   }
 
-  separation(boids) {
+  // Cohesion
+  cohesion( boids ) {
     let steering = createVector();
-    for (let other of boids) {
-      const d = this.position.dist(other.position);
-      let diff = p5.Vector.sub(this.position, other.position);
-      diff.div(d * d);
-      steering.add(diff);
+
+    if ( !boids || !boids.length ) return steering;
+
+    for ( let other of boids ) {
+      steering.add( other.position );
     }
-    if (boids.length > 0) {
-      steering.div(boids.length);
-      steering.setMag(this.maxSpeed);
-      steering.sub(this.velocity);
-      steering.limit(this.maxForce);
-    }
-    return steering.mult(separationSlider.value());
+    steering.div( boids.length );
+    steering = this.seek( steering );
+    return steering.mult( cohesionSlider.value() );
+
   }
 
-  cohesion(boids) {
+  // Separation
+  separation( boids ) {
     let steering = createVector();
-    for (let other of boids) {
-      steering.add(other.position);
+
+    if ( !boids || !boids.length ) return steering;
+
+    for ( let other of boids ) {
+      const d = this.distance( other );
+      let diff = p5.Vector.sub( this.position, other.position );
+      diff.div( d );
+      steering.add( diff );
     }
-    if (boids.length) {
-      steering.sub(this.position);
-      steering.div(boids.length);
+    steering.div( boids.length );
 
-      steering.setMag(this.maxSpeed);
-      steering.sub(this.velocity);
-      steering.limit(this.maxForce);
+    if ( steering.mag() > 0 ) {
+      steering.setMag( this.maxSpeed );
+      steering.sub( this.velocity );
+      steering.limit( this.maxForce );
     }
 
-    return steering.mult(cohesionSlider.value());
+    return steering.mult( separationSlider.value() );
   }
 
-  edges() {
-    if (this.position.x > width) {
-      this.position.x = 0;
-    } else if (this.position.x < 0) {
-      this.position.x = width;
-    }
-    if (this.position.y > height) {
-      this.position.y = 0;
-    } else if (this.position.y < 0) {
-      this.position.y = height;
-    }
+  // Seek
+  seek( target ) {
+    // Desired = target - velocity
+    const desired = p5.Vector.sub( target, this.position );
+    desired.setMag( this.maxSpeed );
+    // Steering = Desired minus Velocity
+    const steer = p5.Vector.sub( desired, this.velocity );
+    steer.limit( this.maxForce ); // Limit to maximum steering force
+    return steer;
   }
 
-  flock(boids) {
-    let neighbors = this.getNeighborBoids(boids);
-
-    const alignment = this.align(neighbors);
-    const cohesion = this.cohesion(neighbors);
-    const separation = this.separation(neighbors);
-
-    this.acceleration.add(alignment);
-    this.acceleration.add(cohesion);
-    this.acceleration.add(separation);
+  handleEdges() {
+    if ( this.position.x > width ) this.position.x = 0;
+    if ( this.position.x < 0 ) this.position.x = width;
+    if ( this.position.y > height ) this.position.y = 0;
+    if ( this.position.y < 0 ) this.position.y = height;
   }
 
-  update(flock) {
-    this.edges();
-    this.flock(flock);
+  flock( boids ) {
+    let neighbors = this.getNeighborBoids( boids );
 
-    this.position.add(this.velocity);
-    this.velocity.add(this.acceleration);
-    this.velocity.limit(this.maxSpeed);
-    this.acceleration.mult(0);
+    const alignment = this.align( neighbors );
+    const cohesion = this.cohesion( neighbors );
+    const separation = this.separation( neighbors );
+
+    this.acceleration.add( alignment );
+    this.acceleration.add( cohesion );
+    this.acceleration.add( separation );
   }
 
-  show() {
-    strokeWeight(6);
-    stroke(255);
-    point(this.position.x, this.position.y);
+  update( boids ) {
+    this.handleEdges();
 
-    if (showPerception) {
-      strokeWeight(1);
-      stroke(0, 255, 0);
-      noFill()
-      ellipse(this.position.x, this.position.y, perceptionRange, perceptionRange)
-    }
+    const neighbors = this.getNeighborBoids( boids );
+
+    this.flock( neighbors );
+
+    this.velocity.add( this.acceleration );
+    this.velocity.limit( this.maxSpeed );
+    this.position.add( this.velocity );
+    this.acceleration.mult( 0 );
   }
 
-  getNeighborBoids(boids) {
-    return boids.filter(boid => {
-      return this.isDifferentBoid(boid) && this.isInRange(boid);
-    });
+  render() {
+    //figure out r better
+    const r = perceptionRange / 8;
+    const theta = this.velocity.heading() + radians( 90 );
+
+    fill( 200, 100 );
+    stroke( 255 );
+    push();
+    translate( this.position.x, this.position.y );
+    rotate( theta );
+    beginShape( TRIANGLES );
+    vertex( 0, -r * 2 );
+    vertex( -r, r * 2 );
+    vertex( r, r * 2 );
+    endShape();
+    pop();
+
+    if ( showCenter ) this.renderCenter();
+    if ( showPerception ) this.renderPerception();
   }
 
-  isDifferentBoid(boid) {
+  renderCenter() {
+    push();
+    strokeWeight( 6 );
+    stroke( 0, 255, 0 );
+    point( this.position.x, this.position.y );
+    pop();
+  }
+
+  renderPerception() {
+    push();
+    strokeWeight( 1 );
+    stroke( 0, 255, 0 );
+    noFill()
+    ellipseMode( CENTER )
+    ellipse( this.position.x, this.position.y, perceptionRange, perceptionRange );
+    pop();
+  }
+
+  getNeighborBoids( boids ) {
+    return boids.filter( boid => {
+      return this.isDifferentBoid( boid ) && this.isInRange( boid );
+    } );
+  }
+
+  isDifferentBoid( boid ) {
     return boid !== this;
   }
 
-  isInRange(boid) {
-    return dist(this.position.x, this.position.y, boid.position.x, boid.position.y) < perceptionRange;
+  isInRange( boid ) {
+    return dist( this.position.x, this.position.y, boid.position.x, boid.position.y ) < perceptionRange;
   }
 
+  distance( boid ) {
+    return this.position.dist( boid.position )
+  }
 }
