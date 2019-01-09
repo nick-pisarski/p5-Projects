@@ -15,10 +15,12 @@ class Rectangle {
   }
 
   contains( point ) {
-    return ( point.x >= this.x - this.w &&
+    return (
+      point.x >= this.x - this.w &&
       point.x <= this.x + this.w &&
       point.y >= this.y - this.h &&
-      point.y <= this.y + this.h );
+      point.y <= this.y + this.h
+    );
   }
 
   intersects( range ) {
@@ -26,6 +28,17 @@ class Rectangle {
       range.x + range.w < this.x - this.w ||
       range.y - range.h > this.y + this.h ||
       range.y + range.h < this.y - this.h );
+  }
+
+  render() {
+    push();
+    // point
+    strokeWeight( 8 );
+    stroke( 255, 0, 0 );
+    point( this.x, this.y );
+    rectMode( CENTER )
+    rect( this.x, this.y, this.w, this.h );
+    pop();
   }
 
 }
@@ -45,6 +58,7 @@ class Circle {
     // the circle
     let d = Math.pow( ( point.x - this.x ), 2 ) + Math.pow( ( point.y - this.y ), 2 );
     return d <= this.rSquared;
+
   }
 
   intersects( range ) {
@@ -54,11 +68,8 @@ class Circle {
 
     // radius of the circle
     let r = this.r;
-
     let w = range.w;
     let h = range.h;
-
-    let edges = Math.pow( ( xDist - w ), 2 ) + Math.pow( ( yDist - h ), 2 );
 
     // no intersection
     if ( xDist > ( r + w ) || yDist > ( r + h ) )
@@ -69,7 +80,18 @@ class Circle {
       return true;
 
     // intersection on the edge of the circle
+    let edges = Math.pow( ( xDist - w ), 2 ) + Math.pow( ( yDist - h ), 2 );
     return edges <= this.rSquared;
+  }
+
+  render() {
+    push();
+    strokeWeight( 2 );
+    stroke( 255, 255, 0 );
+    noFill();
+    ellipseMode( CENTER );
+    ellipse( this.x, this.y, this.r, this.r );
+    pop();
   }
 }
 

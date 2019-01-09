@@ -3,14 +3,15 @@
 Some random fun projects using th [P5.js](https://p5js.org/) library
 
 - [P5 Projects](#p5-projects)
-    - [Cannon](#cannon)
-    - [DroppingBalls](#droppingballs)
-    - [EmptyProject](#emptyproject)
-    - [MazeGenerator](#mazegenerator)
-    - [PhysicsObjects](#physicsobjects)
-    - [UserCtrlObject](#userctrlobject)
-    - [Lissajous Curve Table](#lissajous-curve-table)
-    - [Chaos Game](#chaos-game)
+  - [Cannon](#cannon)
+  - [DroppingBalls](#droppingballs)
+  - [EmptyProject](#emptyproject)
+  - [APathFinder](#apathfinder)
+  - [PhysicsObjects](#physicsobjects)
+  - [UserCtrlObject](#userctrlobject)
+  - [Lissajous Curve Table](#lissajous-curve-table)
+  - [Chaos Game](#chaos-game)
+  - [Flocking Boids](#flocking-boids)
 
 ## Cannon
 
@@ -24,9 +25,9 @@ Created Ball objects that are affect by physics
 
 An empty project used as a base for other projects
 
-## MazeGenerator
+## APathFinder
 
-A project to generate maze. Also implements an A* pathing to solve the maze
+Implementation of an A* pathing.
 
 ## PhysicsObjects
 
@@ -43,3 +44,7 @@ A creation of the [Lissajous Curve](https://en.wikipedia.org/wiki/Lissajous_curv
 ## Chaos Game
 
 Creation of the [Chaos Game](https://en.wikipedia.org/wiki/Chaos_game). Need to add HTML elements to control various aspects.
+
+## Flocking Boids
+
+A small flocking simulation that implements [Craig Reynold's flocking behavior](http://www.red3d.com/cwr/boids/).

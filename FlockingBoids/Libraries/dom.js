@@ -36,12 +36,12 @@ function makeSlider( lbl, def_value, parent ) {
   }
 }
 
-function makeCheckbox( lbl, parent, callback ) {
+function makeCheckbox( lbl, default_value, parent, callback ) {
   const container = createDiv().addClass( 'container' );
-  const label = makeLabel( lbl );
-  label.parent( container );
+  //   const label = makeLabel( lbl );
+  //   label.parent( container );
 
-  const check = createInput( '', 'checkbox' );
+  const check = createCheckbox( lbl, default_value )
   check.changed( callback );
   check.parent( container );
 
@@ -78,9 +78,11 @@ function makeControls() {
   makeSlider( 'Separation', DEF_SEPARATION, controls );
   makeInput( 'Perception Range', controls, evt => perceptionRange = parseInt( evt.target.value ) );
   makeInput( '# Boids', controls, evt => flockSize = parseInt( evt.target.value ) );
-  makeCheckbox( 'Show Perception', controls, evt => showPerception = evt.target.checked );
-  makeCheckbox( 'Show Center', controls, evt => showCenter = evt.target.checked );
-  makeCheckbox( 'Random Boids', controls, evt => randomBoids = evt.target.checked );
+  makeCheckbox( 'Show Perception', showPerception, controls, evt => showPerception = evt.target.checked );
+  makeCheckbox( 'Show Center', showCenter, controls, evt => showCenter = evt.target.checked );
+  makeCheckbox( 'Show Position', showPosition, controls, evt => showPosition = evt.target.checked );
+  makeCheckbox( 'Show Position', showName, controls, evt => showName = evt.target.checked );
+  makeCheckbox( 'Random Boids', randomBoids, controls, evt => randomBoids = evt.target.checked );
   makeButton( 'Reset Flock', controls, resetFlock );
 }
 

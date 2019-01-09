@@ -1,15 +1,12 @@
-// Flocking
-// Daniel Shiffman
-// https://thecodingtrain.com/CodingChallenges/124-flocking-boids.html
-// https://youtu.be/mhjuuHl6qHM
-
 let flock;
 let boidTree;
 let boundary;
 
 let alignSlider, cohesionSlider, separationSlider;
-let showPerception = false;
+let showPerception = true;
 let showCenter = false;
+let showPosition = false;
+let showName = true;
 let perceptionRange = 50;
 let randomBoids = false;
 let flockSize = 100;
@@ -28,14 +25,14 @@ function draw() {
   background( 0 );
 
   // Create Quad Tree
-  boundary = new Rectangle( windowWidth / 2, windowHeight / 2, windowWidth - 40, windowHeight - 200 );
+  boundary = new Rectangle( width / 2, height / 2, width, height );
+  // boundary.render();
   boidTree = new BoidTree( boundary, 4 );
-  for ( let boid of flock ) {
-    boidTree.insert( boid );
-  }
-
   const snapshot = flock.slice( 0 );
-  for ( let boid of flock ) {
+
+  for ( let i = 0; i < snapshot.length; i++ ) {
+    const boid = snapshot[ i ]
+    boidTree.insert( boid );
     boid.update( snapshot );
     boid.render();
   }
@@ -43,14 +40,22 @@ function draw() {
 }
 
 function resetFlock() {
+  print( 'Resetting Flock...' );
   flock = [];
   for ( let i = 0; i < flockSize; i++ ) {
+    const name = `${i + 1}`;
     if ( randomBoids ) {
-      flock.push( new Boid( maxForce = random( 0 ) / 100, maxSpeed = random( 2 ) ) )
+      const maxForce = random() / 10;
+      const maxSpeed = random( 3 );
+      flock.push( new Boid( name, maxForce, maxSpeed ) )
     } else {
-      flock.push( new Boid() );
+      flock.push( new Boid( name ) );
     }
   }
+}
+
+function doubleClicked( $e ) {
+  print( `[ ${$e.x}, ${$e.y} ]` );
 }
 
 /* Nick TODO -

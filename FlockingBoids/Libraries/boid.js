@@ -4,7 +4,8 @@
 // https://youtu.be/mhjuuHl6qHM
 
 class Boid {
-  constructor( maxForce = 0.1, maxSpeed = 2 ) {
+  constructor( name, maxForce = 0.1, maxSpeed = 2 ) {
+    this.name = name;
     this.position = createVector( random( width ), random( height ) );
     this.velocity = p5.Vector.random2D();
     this.velocity.setMag( random( -4, 4 ) );
@@ -54,9 +55,8 @@ class Boid {
     if ( !boids || !boids.length ) return steering;
 
     for ( let other of boids ) {
-      const d = this.distance( other );
       let diff = p5.Vector.sub( this.position, other.position );
-      diff.div( d );
+      diff.div( this.distance( other ) );
       steering.add( diff );
     }
     steering.div( boids.length );
@@ -103,9 +103,7 @@ class Boid {
   update( boids ) {
     this.handleEdges();
 
-    const neighbors = this.getNeighborBoids( boids );
-
-    this.flock( neighbors );
+    this.flock( boids );
 
     this.velocity.add( this.acceleration );
     this.velocity.limit( this.maxSpeed );
@@ -130,15 +128,31 @@ class Boid {
     endShape();
     pop();
 
-    if ( showCenter ) this.renderCenter();
     if ( showPerception ) this.renderPerception();
+    if ( showPosition ) this.renderPosition();
+    if ( showCenter ) this.renderCenter();
+    if ( showName ) this.renderName();
   }
 
   renderCenter() {
     push();
-    strokeWeight( 6 );
+    strokeWeight( 2 );
     stroke( 0, 255, 0 );
     point( this.position.x, this.position.y );
+    pop();
+  }
+
+  renderPosition() {
+    push();
+    stroke( 255, 0, 0 );
+    text( `[ ${this.position.x.toFixed(1)}, ${this.position.y.toFixed(1)} ]`, this.position.x, this.position.y );
+    pop();
+  }
+
+  renderName() {
+    push();
+    stroke( 255, 255, 0 );
+    text( this.name, this.position.x, this.position.y );
     pop();
   }
 
@@ -155,24 +169,27 @@ class Boid {
   getNeighborBoids( boids ) {
     // create a range
     const range = new Circle( this.position.x, this.position.y, perceptionRange );
-    const neighbors = boidTree.query( range ).filter( boid => this !== boid );
+    let neighbors = boidTree.query( range );
+    // neighbors = neighbors.filter( boid => this.isDifferentBoid( boid ) );
 
     const bs = boids.filter( boid => {
       return this.isDifferentBoid( boid ) && this.isInRange( boid );
     } );
 
+    console.log( `Current:  ${this.name} [${this.position.x.toFixed(1)}, ${this.position.y.toFixed(1)}]` );
+    console.log( `N${neighbors.length} === B${bs.length} : ${neighbors === bs}` );
     return bs;
   }
 
   isDifferentBoid( boid ) {
-    return boid !== this;
+    return this !== boid;
   }
 
   isInRange( boid ) {
-    return dist( this.position.x, this.position.y, boid.position.x, boid.position.y ) < perceptionRange;
+    return this.distance( boid ) <= perceptionRange;
   }
 
   distance( boid ) {
-    return this.position.dist( boid.position )
+    return this.position.dist( boid.position );
   }
 }
