@@ -3,13 +3,13 @@ let boidTree;
 let boundary;
 
 let alignSlider, cohesionSlider, separationSlider;
-let showPerception = true;
+let showPerception = false;
 let showCenter = false;
 let showPosition = false;
-let showName = true;
+let showName = false;
 let perceptionRange = 50;
 let randomBoids = false;
-let flockSize = 100;
+let flockSize = 50;
 
 const DEF_ALIGN = 1;
 const DEF_COHESION = 1;

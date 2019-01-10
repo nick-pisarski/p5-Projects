@@ -81,7 +81,7 @@ function makeControls() {
   makeCheckbox( 'Show Perception', showPerception, controls, evt => showPerception = evt.target.checked );
   makeCheckbox( 'Show Center', showCenter, controls, evt => showCenter = evt.target.checked );
   makeCheckbox( 'Show Position', showPosition, controls, evt => showPosition = evt.target.checked );
-  makeCheckbox( 'Show Position', showName, controls, evt => showName = evt.target.checked );
+  makeCheckbox( 'Show Name', showName, controls, evt => showName = evt.target.checked );
   makeCheckbox( 'Random Boids', randomBoids, controls, evt => randomBoids = evt.target.checked );
   makeButton( 'Reset Flock', controls, resetFlock );
 }
