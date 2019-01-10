@@ -4,7 +4,7 @@ let end;
 let pathfinder;
 
 const DENSITY = .2;
-const TILE_SIZE = 40;
+const TILE_SIZE = 20;
 
 
 
@@ -14,24 +14,15 @@ const TILE_SIZE = 40;
 
 function setup() { 
   createCanvas(800, 800);
-  frameRate(60);
+  frameRate(5);
 
   maze = new Maze(TILE_SIZE);
   maze.buildGrid(DENSITY);
 
-  // Grab Starting Points and make sure they dont have walls;
-  const startPos = randomPostion(maze.rows-1, maze.cols-1);
-  const endPos = randomPostion(maze.rows-1, maze.cols-1);
-  start = maze.grid[startPos.y][startPos.x];
-  end = maze.grid[endPos.y][endPos.x];
+  setStartAndEndPoints();
+ 
 
-  // start = maze.grid[0][0];
-  // end = maze.grid[maze.rows-1][maze.cols-1];
-
-  start.wall = false;
-  end.wall = false;
-
-  pathfinder = new AStar(maze.grid, start, end, true, 'VISUAL');
+  pathfinder = new AStar(maze.grid, start, end, false, 'VISUAL');
 
 } 
 
@@ -43,12 +34,34 @@ function draw() {
 
   const done = pathfinder.step();
 
-  if(done != 0)  noLoop(); 
+  // if(done != 0)  noLoop(); 
+  if(done != 0)  reset(); 
 
   const currentPath = pathfinder.path();
   drawPath(currentPath);  
 }
 
+
+function reset () {
+  maze = new Maze(TILE_SIZE);
+  maze.buildGrid(DENSITY);
+
+  setStartAndEndPoints(); 
+
+  pathfinder = new AStar(maze.grid, start, end, true, 'VISUAL');
+}
+
+function setStartAndEndPoints(){
+   // Grab Starting Points and make sure they dont have walls;
+   const startPos = randomPostion(maze.rows-1, maze.cols-1);
+   const endPos = randomPostion(maze.rows-1, maze.cols-1);
+   start = maze.grid[startPos.y][startPos.x];
+   end = maze.grid[endPos.y][endPos.x];
+ 
+ 
+   start.wall = false;
+   end.wall = false;
+}
 
 
 function drawPath(path) {

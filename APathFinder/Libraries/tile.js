@@ -69,18 +69,12 @@ function Tile(grid, row, col, x, y , height, width, isWall, options) {
     }
 
     this.show = function(fillColor = color(102,173,107)){
-        // stroke(0);
-        // strokeWeight(1);
         noStroke();
         fill(fillColor);
         if(this.wall){
             fill(224,172,109)
         } 
         rect(this.x, this.y, this.width, this.height);
-        
-        // fill(255, 0 ,0)
-        // textAlign(CENTER, CENTER);
-        // text(`${this.row},${this.col}`, this.x , this.y, this.width-1, this.height-1);
 
     }
     
