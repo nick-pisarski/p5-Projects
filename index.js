@@ -1,22 +1,25 @@
-// Create a link tag for project
-function createProjectItem( project ) {
-  const link = document.createElement( 'a' );
-  link.innerHTML = project.title;
-  link.href = `./${project.folder}/index.html`;
+function projectHtmlTemplate( project ) {
+  let template = '';
+  template += `<a class="link project-title" href="./${project.folder}/index.html">${project.title}</a>`;
+  template += `<div class="project-desc">${project.description}</div>`;
 
-  const li = document.createElement( 'li' );
-  li.classList.add( 'project-item' );
-  li.appendChild( link );
-  return li;
+  if ( project.resources ) {
+    const links = project.resources.map( r => `<a class="link" target="_blank" href="${r.link}">${r.title}</a>` );
+    template += `<div class="project-resources">Resources: ${links.join(', ')}</div>`;
+  }
+
+  return template;
 
 }
 
 function createProjectList() {
   const list = document.getElementById( 'projects' );
 
-  projects.forEach( value => {
-    const p = createProjectItem( value );
-    list.appendChild( p );
+  projects.forEach( project => {
+    const li = document.createElement( 'li' );
+    li.classList.add( 'project-item', 'shadow' );
+    li.innerHTML = projectHtmlTemplate( project );
+    list.appendChild( li );
   } );
 }
 
