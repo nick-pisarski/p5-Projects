@@ -7,7 +7,7 @@ let cols;
 let rows;
 
 function setup() {
-  const canvas = createCanvas( windowWidth - 100, windowHeight - 100 );
+  const canvas = createCanvas( windowWidth * .85, windowHeight * .85 );
   canvas.parent( 'sketch' );
   cols = floor( width / w ) - 1;
   rows = floor( height / w ) - 1;
@@ -19,19 +19,6 @@ function draw() {
   background( 0 );
 
   LissajousCircle();
-  // const x  = width / 2;
-  // const y = height / 2;
-  // const size = 300;
-  // const p = getSquarePoint( x, y, size);
-  // drawPoint(x, y);
-  // drawSquare(x, y, size);
-  // drawPoint(p.x, p.y);
-
-  // drawLine(x,y,p.x,p.y)
-  // // console.log(p)
-
-  // updateAngle();
-
 }
 
 function LissajousCircle() {
