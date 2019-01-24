@@ -45,7 +45,7 @@ var projects = [ {
     ]
   },
   {
-    "title": "Lissajous Curves",
+    "title": "Lissajous Curves *",
     "description": "A recreation of the Lissajous Curve Table",
     "folder": "LissajousCurve",
     "resources": [ {

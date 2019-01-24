@@ -1,6 +1,7 @@
 function projectHtmlTemplate( project ) {
+  const filePath = `./Projects/${project.folder}/index.html`;
   let template = '';
-  template += `<a class="link project-title" href="./${project.folder}/index.html">${project.title}</a>`;
+  template += `<a class="link project-title" href="${filePath}">${project.title}</a>`;
   template += `<div class="project-desc">${project.description}</div>`;
 
   if ( project.resources ) {
