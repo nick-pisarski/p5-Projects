@@ -1,79 +1,97 @@
-let maze;
-let start;
-let end;
-let pathfinder;
-
-const DENSITY = .2;
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 800;
 const TILE_SIZE = 20;
 
-// Y == ROWS == HEIGHT
-// X == COLUMNS == WIDTH
-//GRID == GRID[ROWS][COLUMNS]
+let grid;
+
+let start;
+let end;
+
+let pathfinder;
 
 function setup() {
-  const canvas = createCanvas( 800, 800 );
+  const canvas = createCanvas( CANVAS_WIDTH, CANVAS_HEIGHT );
   canvas.parent( 'sketch' );
   frameRate( 5 );
 
-  maze = new Maze( TILE_SIZE );
-  maze.buildGrid( DENSITY );
+  // Create grid and populate with necessary data
+  grid = new Grid( CANVAS_WIDTH, CANVAS_HEIGHT, TILE_SIZE );
+  grid.iterate( tile => {
+    tile.data = {
+      f: 0,
+      g: 0,
+      h: 0,
+      vh: 0,
+    }
+  } )
 
-  setStartAndEndPoints();
-
-  pathfinder = new AStar( maze.grid, start, end, false, 'VISUAL' );
+  pathfinder = new AStar( grid, false, 'VISUAL' );
 
 }
 
 function draw() {
-  background( 102, 173, 107 );
-  maze.showGrid();
-  start.show( color( 0, 255, 0 ) )
-  end.show( color( 255, 0, 0 ) )
+  background( 0 );
+  renderGrid();
 
-  const done = pathfinder.step();
+  if ( start && end ) {
+    const done = pathfinder.step();
 
-  // if(done != 0)  noLoop();
-  if ( done != 0 ) reset();
+    pathfinder.drawPath();
+    if ( done != 0 ) noLoop();
 
-  const currentPath = pathfinder.path();
-  drawPath( currentPath );
+  }
 }
 
 function reset() {
-  maze = new Maze( TILE_SIZE );
-  maze.buildGrid( DENSITY );
-
-  setStartAndEndPoints();
-
-  pathfinder = new AStar( maze.grid, start, end, true, 'VISUAL' );
+  pathfinder = new AStar( grid, false, 'VISUAL' );
 }
 
-function setStartAndEndPoints() {
-  // Grab Starting Points and make sure they dont have walls;
-  const startPos = randomPostion( maze.rows - 1, maze.cols - 1 );
-  const endPos = randomPostion( maze.rows - 1, maze.cols - 1 );
-  start = maze.grid[ startPos.y ][ startPos.x ];
-  end = maze.grid[ endPos.y ][ endPos.x ];
-
-  start.wall = false;
-  end.wall = false;
+/**
+ * Renders the tiles in the Grid
+ */
+function renderGrid() {
+  grid.iterate( tile => {
+    strokeWeight( 1 );
+    stroke( 255 );
+    noFill();
+    if ( tile.data.wall ) {
+      fill( 127, 127, 127 );
+    } else if ( tile.position() === start ) {
+      fill( 0, 200, 0 )
+    } else if ( tile.position() === end ) {
+      fill( 200, 0, 0 )
+    }
+    rect( tile.x * tile.size(), tile.y * tile.size(), tile.size(), tile.size() );
+  } )
 }
 
-function drawPath( path ) {
-  // Drawing path as continuous live
-  noFill();
-  stroke( 255, 0, 200 );
-  strokeWeight( 2 );
-  beginShape();
-  for ( var i = 0; i < path.length; i++ ) {
-    vertex( path[ i ].x + path[ i ].width / 2, path[ i ].y + path[ i ].height / 2 );
-  }
-  endShape();
-}
-
-function randomPostion( yMax, xMax ) {
-  return {
-    y: floor( random( 0, yMax ) ),
-    x: floor( random( 0, xMax ) )
+/**
+ * Controls the toggling of walls, start, and end positions
+ */
+function mouseClicked() {
+  if ( grid.inBounds( mouseX, mouseY, true ) && keyIsPressed ) {
+    const tile = grid.find( mouseX, mouseY, true );
+    const pos = tile.position();
+    switch ( key ) {
+    case "w":
+      if ( pos !== end && pos !== start ) {
+        tile.data.wall = !tile.data.wall || false;
+      }
+      break;
+    case "s":
+      if ( pos !== end ) {
+        start = pos;
+      }
+      break;
+    case "e":
+      if ( pos !== start ) {
+        end = pos;
+      }
+      break;
+    default:
+      break;
+    }
+    loop();
+    reset();
   }
 }
