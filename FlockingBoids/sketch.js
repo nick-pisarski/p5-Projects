@@ -16,7 +16,8 @@ const DEF_COHESION = 1;
 const DEF_SEPARATION = 1.5;
 
 function setup() {
-  createCanvas( windowWidth - 40, windowHeight - 200 );
+  const canvas = createCanvas( windowWidth - 40, windowHeight - 200 );
+  canvas.parent( 'sketch' );
   makeControls();
   resetFlock();
 }

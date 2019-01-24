@@ -7,7 +7,8 @@ let cols;
 let rows;
 
 function setup() {
-  createCanvas( windowWidth - 100, windowHeight - 100 );
+  const canvas = createCanvas( windowWidth - 100, windowHeight - 100 );
+  canvas.parent( 'sketch' );
   cols = floor( width / w ) - 1;
   rows = floor( height / w ) - 1;
 
