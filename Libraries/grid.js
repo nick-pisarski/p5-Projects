@@ -1,25 +1,51 @@
 class Tile {
-  constructor( x, y, size, position ) {
+  constructor( grid, x, y ) {
+    this.grid = grid;
     this.x = x;
     this.y = y;
-    this.size = size;
-    this.position = position
     this.data = {}
   }
 
-  getData() {
-    return this.data;
+  size() {
+    return this.grid.tileSize;
   }
 
-  setData( data ) {
-    this.data = data;
+  neighbors( diagonal = false ) {
+    const neighbors = [];
+    const checkNeighor = ( acc, current ) => {
+      if ( this.grid.inBounds( current.x, current.y ) ) {
+        acc.push( this.grid.find( current.x, current.y ) );
+      }
+      return acc;
+    };
+
+    // cardinal
+    const cardinals = [
+      { x: this.x, y: this.y - 1 },
+      { x: this.x + 1, y: this.y },
+      { x: this.x, y: this.y + 1 },
+      { x: this.x - 1, y: this.y },
+    ];
+
+    cardinals.reduce( checkNeighor, neighbors );
+
+    if ( diagonal ) {
+      //diagonals
+      const diagonals = [
+        { x: this.x + 1, y: this.y - 1 },
+        { x: this.x + 1, y: this.y + 1 },
+        { x: this.x - 1, y: this.y + 1 },
+        { x: this.x - 1, y: this.y - 1 },
+      ]
+
+      diagonals.reduce( checkNeighor, neighbors );
+    }
+
+    return neighbors;
   }
 
-  render() {
-    stroke( 255 );
-    strokeWeight( 1 );
-    noFill();
-    rect( this.x * this.size, this.y * this.size, this.size, this.size );
+  position() {
+    return this.x + ( this.y * this.grid.width );
   }
 }
 
@@ -48,13 +74,17 @@ class Grid {
     this.list = [];
   }
 
+  getTiles() {
+    return this.list;
+  }
+
   /**
    * Builds the grid with Tile objects
    */
   build() {
     for ( let r = 0; r < this.height; r++ ) {
       for ( let c = 0; c < this.width; c++ ) {
-        this.list.push( new Tile( c, r, tileSize, c + ( r * this.width ) ) )
+        this.list.push( new Tile( this, c, r ) )
       }
     }
   }
@@ -92,9 +122,9 @@ class Grid {
    */
   inBounds( x, y, pixel = false ) {
     if ( pixel ) {
-      return x < this.canvasWidth && x > 0 && y > 0 && y < this.canvasHeight;
+      return x < this.canvasWidth && x >= 0 && y >= 0 && y < this.canvasHeight;
     }
-    return x < this.width && x > 0 && y > 0 && y < this.height;
+    return x < this.width && x >= 0 && y >= 0 && y < this.height;
   }
 
   iterate( callback ) {
