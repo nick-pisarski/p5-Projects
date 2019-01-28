@@ -3,17 +3,33 @@ class Tile {
     this.grid = grid;
     this.x = x;
     this.y = y;
-    this.data = {}
+    this.data = {};
+    this.size = this.grid.tileSize;
+    this.position = this.x + ( this.y * this.grid.width );
   }
 
-  size() {
-    return this.grid.tileSize;
+  center() {
+    return {
+      x: this.x * this.size + ( this.size / 2 ),
+      y: this.y * this.size + ( this.size / 2 )
+    }
   }
 
+  coordinates() {
+    return {
+      x: this.x * this.size,
+      y: this.y * this.size
+    }
+  }
+
+  // Returns all the adjacent neighbors
+  // should add a callback to be called to all further filtering
   neighbors( diagonal = false ) {
     const neighbors = [];
     const checkNeighor = ( acc, current ) => {
       if ( this.grid.inBounds( current.x, current.y ) ) {
+
+        // add filtering callback here
         acc.push( this.grid.find( current.x, current.y ) );
       }
       return acc;
@@ -42,10 +58,6 @@ class Tile {
     }
 
     return neighbors;
-  }
-
-  position() {
-    return this.x + ( this.y * this.grid.width );
   }
 }
 

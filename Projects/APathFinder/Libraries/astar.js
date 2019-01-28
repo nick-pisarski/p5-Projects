@@ -73,12 +73,10 @@ class AStar {
       let neighbors = currentTile.neighbors( this.allowDiagonal ).filter( n => !n.data.wall );
 
       neighbors.forEach( ( neighbor ) => {
-        const pos = neighbor.position();
-
-        if ( this.closedSet.indexOf( pos ) < 0 ) {
+        if ( this.closedSet.indexOf( neighbor.position ) < 0 ) {
           var tempG = currentTile.data.g + this.heuristic( currentTile, neighbor );
-          if ( this.openSet.indexOf( pos ) < 0 ) {
-            this.openSet.push( pos );
+          if ( this.openSet.indexOf( neighbor.position ) < 0 ) {
+            this.openSet.push( neighbor.position );
           } else if ( tempG >= neighbor.data.g ) {
             return;
           }
@@ -109,7 +107,7 @@ class AStar {
     beginShape();
     for ( var i = 0; i < path.length; i++ ) {
       const p = path[ i ];
-      vertex( p.size() * ( p.x + 0.5 ), p.size() * ( p.y + 0.5 ) );
+      vertex( p.size * ( p.x + 0.5 ), p.size * ( p.y + 0.5 ) );
     }
     endShape();
   }
