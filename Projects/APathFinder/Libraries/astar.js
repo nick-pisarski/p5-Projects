@@ -1,5 +1,5 @@
 class AStar {
-  constructor( grid, allowDiagonal = false, distance = 'MAN' ) {
+  constructor( grid, allowDiagonal = false, distance = 'MANHATTAN' ) {
     this.grid = grid;
     this.lastCheckedNode = start;
 
@@ -9,9 +9,10 @@ class AStar {
     this.distance = distance;
     this.allowDiagonal = allowDiagonal;
   }
+
   //function to determine score for two node
   heuristic( a, b ) {
-    if ( this.disatnce === 'VISUAL' )
+    if ( this.distance === 'VISUAL' )
       return sqrt( abs( a.x - b.x ) + abs( a.y - b.y ) );
     return abs( a.x - b.x ) + abs( a.y - b.y )
   }
@@ -53,17 +54,14 @@ class AStar {
       let current = this.openSet[ winner ];
       this.lastCheckedNode = current;
 
-      //check if its the end
-      if ( current.position() === end ) {
-        console.log( 'Done!' );
-        return 1;
-      }
+      // Solution Found
+      if ( current.position() === end ) { return 1; }
 
       this.removeFromArray( this.openSet, current );
       this.closedSet.push( current );
 
-      //checking the neighbors
-      const neighbors = current.neighbors( this.allowDiagonal );
+      //checking the neighbors and filtering out ones that are walls
+      let neighbors = current.neighbors( this.allowDiagonal ).filter( n => !n.data.wall );
 
       neighbors.forEach( ( neighbor ) => {
         if ( !this.closedSet.includes( neighbor ) ) {
@@ -83,22 +81,25 @@ class AStar {
 
       return 0;
     } else {
-      console.log( 'No Solution' );
+      // No solution
       return -1;
     }
   }
 
-  drawPath() {
-    // Drawing path as continuous live
+  /**
+   * show the current path
+   * @param {color*} lineColor default = color( 255, 0, 200 )
+   * @param {number*} lineThickness default = 2
+   */
+  show( lineColor = color( 255, 0, 200 ), lineThickness = 2 ) {
     const path = this.path();
     noFill();
-    stroke( 255, 0, 200 );
-    strokeWeight( 2 );
+    stroke( lineColor );
+    strokeWeight( lineThickness );
     beginShape();
     for ( var i = 0; i < path.length; i++ ) {
       const p = path[ i ];
-      const s = p.size();
-      vertex( p.x * s + ( s / 2 ), p.y * s + ( s / 2 ) );
+      vertex( p.size() * ( p.x + 0.5 ), p.size() * ( p.y + 0.5 ) );
     }
     endShape();
   }

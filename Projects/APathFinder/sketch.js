@@ -2,17 +2,29 @@ const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 800;
 const TILE_SIZE = 20;
 
+// Calculate distance via 'VISUAL' distance or 'MANHATTAN'. VISUAL calculates using sqrt.
+const DIST_CALC = 'VISUAL';
+
+// Should check diagonals
+const ALLOW_DIAGONALS = true;
+
+// Grid to store map data
 let grid;
 
+// Postions of the current start and end
 let start;
 let end;
 
-let pathfinder;
+//Store the A* Path object
+let path;
+
+// stores the currently selectedTile position while mouse is being dragged
+let selectedTilePosition;
 
 function setup() {
   const canvas = createCanvas( CANVAS_WIDTH, CANVAS_HEIGHT );
   canvas.parent( 'sketch' );
-  frameRate( 5 );
+  frameRate( 25 );
 
   // Create grid and populate with necessary data
   grid = new Grid( CANVAS_WIDTH, CANVAS_HEIGHT, TILE_SIZE );
@@ -25,25 +37,25 @@ function setup() {
     }
   } )
 
-  pathfinder = new AStar( grid, false, 'VISUAL' );
-
+  path = new AStar( grid, ALLOW_DIAGONALS, DIST_CALC );
 }
 
 function draw() {
   background( 0 );
   renderGrid();
 
+  // Must have start and end points to calculate path
   if ( start && end ) {
-    const done = pathfinder.step();
+    const done = path.step();
 
-    pathfinder.drawPath();
+    if ( done == 1 ) {
+      path.show( color( 0, 255, 0 ), 10 );
+
+    } else {
+      path.show();
+    }
     if ( done != 0 ) noLoop();
-
   }
-}
-
-function reset() {
-  pathfinder = new AStar( grid, false, 'VISUAL' );
 }
 
 /**
@@ -54,19 +66,24 @@ function renderGrid() {
     strokeWeight( 1 );
     stroke( 255 );
     noFill();
+
+    const pos = tile.position();
+    const size = tile.size();
+
     if ( tile.data.wall ) {
       fill( 127, 127, 127 );
-    } else if ( tile.position() === start ) {
+    } else if ( pos === start ) {
       fill( 0, 200, 0 )
-    } else if ( tile.position() === end ) {
+    } else if ( pos === end ) {
       fill( 200, 0, 0 )
     }
-    rect( tile.x * tile.size(), tile.y * tile.size(), tile.size(), tile.size() );
+
+    rect( tile.x * size, tile.y * size, size, size );
   } )
 }
 
 /**
- * Controls the toggling of walls, start, and end positions
+ * Controls the toggling of walls, start, and end positions.
  */
 function mouseClicked() {
   if ( grid.inBounds( mouseX, mouseY, true ) && keyIsPressed ) {
@@ -79,19 +96,53 @@ function mouseClicked() {
       }
       break;
     case "s":
-      if ( pos !== end ) {
-        start = pos;
-      }
+      if ( pos !== end ) { start = pos; }
       break;
     case "e":
-      if ( pos !== start ) {
-        end = pos;
-      }
+      if ( pos !== start ) { end = pos; }
       break;
     default:
       break;
     }
-    loop();
-    reset();
+    restart();
   }
+}
+
+function mouseDragged() {
+  if ( grid.inBounds( mouseX, mouseY, true ) && keyIsPressed && key == "w" ) {
+    const currTile = grid.find( mouseX, mouseY, true );
+    if ( currTile.position() !== selectedTilePosition ) {
+      currTile.data.wall = !currTile.data.wall;
+      selectedTilePosition = currTile.position();
+    }
+  }
+}
+
+function mouseReleased() {
+  selectedTile = null;
+}
+
+function restart() {
+  path = new AStar( grid, ALLOW_DIAGONALS, DIST_CALC );
+  renderGrid();
+  loop();
+}
+
+function clearPath() {
+  path = new AStar( grid, ALLOW_DIAGONALS, DIST_CALC );
+  restart();
+}
+
+function clearWalls() {
+  grid.iterate( tile => tile.data.wall = false );
+  restart();
+}
+
+function reset() {
+  start = null;
+  end = null;
+  clearWalls();
+  clearPath();
+  renderGrid();
+  loop();
 }
