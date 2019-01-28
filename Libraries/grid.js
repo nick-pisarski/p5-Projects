@@ -102,6 +102,14 @@ class Grid {
   }
 
   /**
+   * returns a tile from the grd
+   * @param {num} pos position in the grid
+   */
+  get( pos ) {
+    return this.list[ pos ] ? this.list[ pos ] : false;
+  }
+
+  /**
    * Calculates the position in the array based on x,y coords
    * @param {number} x x coord can be col value or pixel value
    * @param {number} y y coord can be col value or pixel value

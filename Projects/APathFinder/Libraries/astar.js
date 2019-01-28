@@ -4,7 +4,7 @@ class AStar {
     this.lastCheckedNode = start;
 
     this.openSet = [];
-    this.openSet.push( this.grid.list[ start ] );
+    this.openSet.push( start );
     this.closedSet = [];
     this.distance = distance;
     this.allowDiagonal = allowDiagonal;
@@ -12,9 +12,11 @@ class AStar {
 
   //function to determine score for two node
   heuristic( a, b ) {
-    if ( this.distance === 'VISUAL' )
-      return sqrt( abs( a.x - b.x ) + abs( a.y - b.y ) );
-    return abs( a.x - b.x ) + abs( a.y - b.y )
+    if ( this.distance === 'VISUAL' ) {
+      return sqrt( sq( a.x - b.x ) + sq( a.y - b.y ) );
+    }
+    // 'MANHATTAN' DISTANCE
+    return abs( a.x - b.x ) + abs( a.y - b.y );
   }
 
   // Function to delete element from the array
@@ -25,7 +27,7 @@ class AStar {
 
   path() {
     const path = [];
-    var temp = this.lastCheckedNode;
+    var temp = this.grid.get( this.lastCheckedNode );
     path.push( temp );
     while ( temp.data.previous ) {
       path.push( temp.data.previous );
@@ -35,11 +37,17 @@ class AStar {
   }
 
   step() {
+    /**
+     * Need to update the storing of the open and closed sets, should store the position of the node.
+     * Since there is access to the grid we can just access them directly
+     */
     if ( this.openSet.length > 0 ) {
       let winner = 0;
       for ( let i = 1; i < this.openSet.length; i++ ) {
-        const currentData = this.openSet[ i ].data;
-        const winnerData = this.openSet[ winner ].data;
+        const currentData = this.grid.get( this.openSet[ i ] ).data;
+
+        const winnerData = this.grid.get( this.openSet[ winner ] ).data;
+
         if ( currentData.f < winnerData.f ) {
           winner = i;
         }
@@ -51,31 +59,33 @@ class AStar {
         }
       }
 
-      let current = this.openSet[ winner ];
-      this.lastCheckedNode = current;
+      let currentPos = this.openSet[ winner ];
+      this.lastCheckedNode = currentPos;
 
       // Solution Found
-      if ( current.position() === end ) { return 1; }
+      if ( currentPos === end ) { return 1; }
 
-      this.removeFromArray( this.openSet, current );
-      this.closedSet.push( current );
+      this.removeFromArray( this.openSet, currentPos );
+      this.closedSet.push( currentPos );
 
       //checking the neighbors and filtering out ones that are walls
-      let neighbors = current.neighbors( this.allowDiagonal ).filter( n => !n.data.wall );
+      let currentTile = this.grid.get( currentPos );
+      let neighbors = currentTile.neighbors( this.allowDiagonal ).filter( n => !n.data.wall );
 
       neighbors.forEach( ( neighbor ) => {
-        if ( !this.closedSet.includes( neighbor ) ) {
+        const pos = neighbor.position();
 
-          var tempG = current.data.g + this.heuristic( current, neighbor );
-          if ( !this.openSet.includes( neighbor ) ) {
-            this.openSet.push( neighbor );
+        if ( this.closedSet.indexOf( pos ) < 0 ) {
+          var tempG = currentTile.data.g + this.heuristic( currentTile, neighbor );
+          if ( this.openSet.indexOf( pos ) < 0 ) {
+            this.openSet.push( pos );
           } else if ( tempG >= neighbor.data.g ) {
             return;
           }
           neighbor.data.g = tempG;
-          neighbor.data.h = this.heuristic( neighbor, this.grid.list[ end ] );
+          neighbor.data.h = this.heuristic( neighbor, this.grid.get( end ) );
           neighbor.data.f = neighbor.data.g + neighbor.data.h;
-          neighbor.data.previous = current;
+          neighbor.data.previous = currentTile;
         }
       } );
 

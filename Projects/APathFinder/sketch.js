@@ -4,6 +4,7 @@ const TILE_SIZE = 20;
 
 // Calculate distance via 'VISUAL' distance or 'MANHATTAN'. VISUAL calculates using sqrt.
 const DIST_CALC = 'VISUAL';
+// const DIST_CALC = 'MANHATTAN';
 
 // Should check diagonals
 const ALLOW_DIAGONALS = true;
