@@ -1,79 +1,61 @@
-let maze;
+const CANVAS_WIDTH = 1200;
+const CANVAS_HEIGHT = 800;
+const TILE_SIZE = 40;
+
+// Calculate distance via 'VISUAL' distance or 'MANHATTAN'. VISUAL calculates using sqrt.
+const DIST_CALC = 'VISUAL';
+// const DIST_CALC = 'MANHATTAN';
+
+// Should check diagonals
+const ALLOW_DIAGONALS = true;
+
+// Grid to store map data
+let grid;
+
+// Postions of the current start and end
 let start;
 let end;
-let pathfinder;
 
-const DENSITY = .2;
-const TILE_SIZE = 20;
+//Store the A* Path object
+let path;
 
-// Y == ROWS == HEIGHT
-// X == COLUMNS == WIDTH
-//GRID == GRID[ROWS][COLUMNS]
+// stores the currently selectedTile position while mouse is being dragged
+let selectedTilePosition;
 
 function setup() {
-  const canvas = createCanvas( 800, 800 );
+  const canvas = createCanvas( CANVAS_WIDTH, CANVAS_HEIGHT );
   canvas.parent( 'sketch' );
-  frameRate( 5 );
+  frameRate( 60 );
 
-  maze = new Maze( TILE_SIZE );
-  maze.buildGrid( DENSITY );
+  // Create grid and populate with necessary data
+  grid = new Grid( CANVAS_WIDTH, CANVAS_HEIGHT, TILE_SIZE );
+  grid.iterate( tile => {
+    tile.data = {
+      f: 0,
+      g: 0,
+      h: 0,
+      vh: 0,
+      wall: false
+    }
+  } )
 
-  setStartAndEndPoints();
-
-  pathfinder = new AStar( maze.grid, start, end, false, 'VISUAL' );
-
+  path = new AStar( grid, ALLOW_DIAGONALS, DIST_CALC );
 }
 
 function draw() {
-  background( 102, 173, 107 );
-  maze.showGrid();
-  start.show( color( 0, 255, 0 ) )
-  end.show( color( 255, 0, 0 ) )
+  background( color( 0, 95, 0 ) );
+  renderGrid();
 
-  const done = pathfinder.step();
+  // Must have start and end points to calculate path
+  if ( start && end ) {
+    const done = path.step();
 
-  // if(done != 0)  noLoop();
-  if ( done != 0 ) reset();
+    if ( done == 1 ) {
+      path.show( color( 0, 182, 0 ), 6 );
 
-  const currentPath = pathfinder.path();
-  drawPath( currentPath );
-}
-
-function reset() {
-  maze = new Maze( TILE_SIZE );
-  maze.buildGrid( DENSITY );
-
-  setStartAndEndPoints();
-
-  pathfinder = new AStar( maze.grid, start, end, true, 'VISUAL' );
-}
-
-function setStartAndEndPoints() {
-  // Grab Starting Points and make sure they dont have walls;
-  const startPos = randomPostion( maze.rows - 1, maze.cols - 1 );
-  const endPos = randomPostion( maze.rows - 1, maze.cols - 1 );
-  start = maze.grid[ startPos.y ][ startPos.x ];
-  end = maze.grid[ endPos.y ][ endPos.x ];
-
-  start.wall = false;
-  end.wall = false;
-}
-
-function drawPath( path ) {
-  // Drawing path as continuous live
-  noFill();
-  stroke( 255, 0, 200 );
-  strokeWeight( 2 );
-  beginShape();
-  for ( var i = 0; i < path.length; i++ ) {
-    vertex( path[ i ].x + path[ i ].width / 2, path[ i ].y + path[ i ].height / 2 );
-  }
-  endShape();
-}
-
-function randomPostion( yMax, xMax ) {
-  return {
-    y: floor( random( 0, yMax ) ),
-    x: floor( random( 0, xMax ) )
+    } else {
+      path.show();
+    }
+    if ( done != 0 ) noLoop();
   }
 }

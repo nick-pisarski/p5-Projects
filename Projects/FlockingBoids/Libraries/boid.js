@@ -176,8 +176,8 @@ class Boid {
       return this.isDifferentBoid( boid ) && this.isInRange( boid );
     } );
 
-    console.log( `Current:  ${this.name} [${this.position.x.toFixed(1)}, ${this.position.y.toFixed(1)}]` );
-    console.log( `N${neighbors.length} === B${bs.length} : ${neighbors === bs}` );
+    // console.log( `Current:  ${this.name} [${this.position.x.toFixed(1)}, ${this.position.y.toFixed(1)}]` );
+    // console.log( `N${neighbors.length} === B${bs.length} : ${neighbors === bs}` );
     return bs;
   }
 

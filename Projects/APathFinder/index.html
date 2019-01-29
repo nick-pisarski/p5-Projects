@@ -14,12 +14,21 @@
 </header>
 
 <body>
+  <div>Click + W to set Wall</div>
+  <div>Click + S to set Start</div>
+  <div>Click + E to set End</div>
+  <div class="controls">
+    <button onclick="reset()">Reset</button>
+    <button onclick="restart()">Restart</button>
+    <button onclick="clearWalls()">Clear All Walls</button>
+  </div>
   <div id="sketch">
     <!-- Canvas will be placed here DO NOT REMOVE -->
   </div>
-  <script src="Libraries/tile.js"></script>
-  <script src="Libraries/maze.js"></script>
+  <script src="../../Libraries/grid.js"></script>
   <script src="Libraries/astar.js"></script>
+  <script src="Libraries/utilities.js"></script>
+  <script src="Libraries/renderers.js"></script>
   <script src="sketch.js"></script>
 </body>
 
