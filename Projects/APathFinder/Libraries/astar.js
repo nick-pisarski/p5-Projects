@@ -70,7 +70,7 @@ class AStar {
 
       //checking the neighbors and filtering out ones that are walls
       let currentTile = this.grid.get( currentPos );
-      let neighbors = currentTile.neighbors( this.allowDiagonal ).filter( n => !n.data.wall );
+      let neighbors = currentTile.neighbors( n => !n.data.wall, this.allowDiagonal );
 
       neighbors.forEach( ( neighbor ) => {
         if ( this.closedSet.indexOf( neighbor.position ) < 0 ) {

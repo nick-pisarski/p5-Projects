@@ -22,14 +22,16 @@ class Tile {
     }
   }
 
-  // Returns all the adjacent neighbors
-  // should add a callback to be called to all further filtering
-  neighbors( diagonal = false ) {
+  /**
+   * Return adjacent Tiles
+   * @param {function(Tile, number, Array):boolean} filterCallback - Function to help specify which neighbors to select
+   * @param {boolean} [diagonal] - Boolean to include diagonal neighbors
+   * @returns {Tile[]} Array of Tile Objects
+   */
+  neighbors( filterCallback = null, diagonal = false ) {
     const neighbors = [];
-    const checkNeighor = ( acc, current ) => {
+    const checkNeighbor = ( acc, current ) => {
       if ( this.grid.inBounds( current.x, current.y ) ) {
-
-        // add filtering callback here
         acc.push( this.grid.find( current.x, current.y ) );
       }
       return acc;
@@ -43,7 +45,7 @@ class Tile {
       { x: this.x - 1, y: this.y },
     ];
 
-    cardinals.reduce( checkNeighor, neighbors );
+    cardinals.reduce( checkNeighbor, neighbors );
 
     if ( diagonal ) {
       //diagonals
@@ -54,9 +56,12 @@ class Tile {
         { x: this.x - 1, y: this.y - 1 },
       ]
 
-      diagonals.reduce( checkNeighor, neighbors );
+      diagonals.reduce( checkNeighbor, neighbors );
     }
 
+    if ( filterCallback && typeof filterCallback == "function" ) {
+      return neighbors.filter( filterCallback );
+    }
     return neighbors;
   }
 }

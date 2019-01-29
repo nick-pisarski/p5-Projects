@@ -1,6 +1,6 @@
-const CANVAS_WIDTH = 800;
+const CANVAS_WIDTH = 1200;
 const CANVAS_HEIGHT = 800;
-const TILE_SIZE = 20;
+const TILE_SIZE = 40;
 
 // Calculate distance via 'VISUAL' distance or 'MANHATTAN'. VISUAL calculates using sqrt.
 const DIST_CALC = 'VISUAL';
@@ -35,6 +35,7 @@ function setup() {
       g: 0,
       h: 0,
       vh: 0,
+      wall: false
     }
   } )
 
@@ -42,7 +43,7 @@ function setup() {
 }
 
 function draw() {
-  background( 0 );
+  background( color( 0, 95, 0 ) );
   renderGrid();
 
   // Must have start and end points to calculate path
