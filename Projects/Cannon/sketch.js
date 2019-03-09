@@ -10,8 +10,18 @@ let entities = [];
 //config
 let numEntities = 1
 
+let bg;
+
+function preload() {
+  try {
+    bg = loadImage( 'assets/background.png' );
+  } catch {
+    console.log( 'Could not load Image' );
+  }
+}
+
 function setup() {
-  const canvas = createCanvas( 1000, 400 );
+  const canvas = createCanvas( 800, 400 );
   canvas.parent( 'sketch' );
   entity = new Cannon( 0, height, 100 );
   // gravity = createVector(0, 0.0001);
@@ -19,10 +29,15 @@ function setup() {
   // jump = createVector(0, -0.005);
 
   // createEntities();
+
 }
 
 function draw() {
-  background( 0 );
+  try {
+    background( bg );
+  } catch ( error ) {
+    background( 0 );
+  }
   entity.update();
   showStats();
 }
