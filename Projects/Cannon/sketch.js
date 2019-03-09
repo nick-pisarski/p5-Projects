@@ -1,63 +1,38 @@
-//forces
-let gravity, wind;
-
-//actions
-let jump;
-
-//entities
-let entities = [];
-
-//config
-let numEntities = 1
-
 let bg;
+let cannon;
 
 function preload() {
-  try {
-    bg = loadImage( 'assets/background.png' );
-  } catch {
-    console.log( 'Could not load Image' );
-  }
+  bg = loadImage( 'assets/background.png' );
 }
 
 function setup() {
   const canvas = createCanvas( 800, 400 );
   canvas.parent( 'sketch' );
-  entity = new Cannon( 0, height, 100 );
-  // gravity = createVector(0, 0.0001);
-  // wind = createVector(0.0001, 0.0001);
-  // jump = createVector(0, -0.005);
-
-  // createEntities();
-
+  cannon = new Cannon( 0, height, 200 );
+  cannon.reload();
 }
 
 function draw() {
-  try {
-    background( bg );
-  } catch ( error ) {
-    background( 0 );
-  }
-  entity.update();
+  background( bg );
+  cannon.update();
   showStats();
 }
 
 function mouseClicked() {
-  entity.fire();
-  console.log( 'Firing', entity )
+  cannon.fire();
 }
 
 function keyPressed() {
   if ( keyCode === 82 ) {
-    entity.reload();
+    cannon.reload();
   }
 }
 
 function showStats() {
   fill( 255 );
   stroke( 127 )
-  text( `Ammo: ${entity.ammo_count}`, 25, 25 )
-  if ( entity.ammo_count < 1 ) {
+  text( `Ammo: ${cannon.ammo_count}`, 25, 25 )
+  if ( cannon.ammo_count < 1 ) {
     fill( 255, 0, 0 );
     stroke( 127, 0, 0 )
     text( 'RELOAD', 25, 50 )
