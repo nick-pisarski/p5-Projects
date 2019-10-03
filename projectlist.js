@@ -1,5 +1,5 @@
 // Projects
-var projects = [ {
+const PROJECT_LIST = [ {
     "title": "A* Path Finder",
     "description": "A simulation demostrating an A* search algorithm",
     "folder": "APathFinder",

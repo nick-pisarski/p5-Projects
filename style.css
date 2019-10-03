@@ -36,9 +36,8 @@ header {
   box-sizing: border-box;
 
   width: 100%;
-  max-width: 90%;
   height: 10%;
-  padding: 5px;
+  padding: 40px;
 
   font-size: 2em;
   background-color: var(--color-blackboard);
@@ -55,7 +54,7 @@ header {
   margin-left: 20px;
 }
 
-a.header-link:hover {
+div.header-link:hover {
   color: var(--color-oxblood);
 }
 
@@ -66,10 +65,9 @@ a.header-link:hover {
   box-shadow: 3px 6px 12px 0px rgba(0, 0, 0, 0.5);
 }
 
-.link,
-.link:visited {
+.link {
   color: var(--color-oxblood);
-  text-decoration: none;
+  cursor: pointer;
 }
 
 .link:hover {
@@ -80,26 +78,43 @@ a.header-link:hover {
 .main {
   display: flex;
   align-items: flex-start;
-  flex-grow: 2;
+  flex-direction: column;
   box-sizing: border-box;
-
-  margin: 20px 0px;
-  max-width: 90%;
+  width: 90%;
 }
 
-.container {
-  width: 30%;
-
+.intro-container {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  justify-content: space-between;
+  margin: 25px 0px;
+}
+
+#intro {
+  margin-right: 10px;
+}
+
+#intro-resource {
+  margin-left: 10px;
+}
+
+.project-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media screen and (max-width: 1300px) {
+  .project-container {
+    flex-direction: column;
+  }
+
+  #project-list {
+    padding: 0px;
+    margin-top: 20px !important;
+  }
 }
 
 .paragraph {
   padding: 30px;
-  margin: 15px 0px;
-
   background-color: var(--color-sand);
   color: var(--color-blackboard);
 }
@@ -110,29 +125,27 @@ canvas {
 }
 
 /* Project List */
-#projects {
+#project-list {
   list-style-type: none;
-  flex-grow: 2;
+  margin: 0px;
 }
 
-#projects .project-item:first-child {
+#project-list .project-list-item:first-child {
   margin-top: 0;
 }
 
-.project-item {
+.project-list-item {
   background: var(--color-tan);
   color: var(--color-sand);
-
   margin: 15px 0;
   padding: 15px 40px;
 }
 
-.project-item:nth-child(2n) a,
-.project-item:nth-child(2n) a:visited {
+.project-list-item:nth-child(2n) div.link {
   color: var(--color-tan);
 }
 
-.project-item:nth-child(2n) {
+.project-list-item:nth-child(2n) {
   color: var(--color-sand);
   background-color: var(--color-oxblood);
 }
@@ -146,8 +159,16 @@ canvas {
 
 .project-desc {
   margin: 10px 0px;
+  /* color: var(--color-sand); */
 }
 
 .project-resources {
   font-size: 0.75em;
+}
+
+#project > div {
+  width: 800px;
+  height: 600px;
+  background-color: black;
+  color: dimgray;
 }
