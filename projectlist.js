@@ -16,6 +16,7 @@ class Resource {
 
 // Projects
 const PROJECT_LIST = [
+  new Project( "Falling Balls", "Create Ball objects that are affected by physics", "DroppingBalls" ),
   new Project( "A* Path Finder", "A simulation demostrating an A* search algorithm", "APathFinder",
     [
       new Resource( 'Wikipedia - A* Search', 'https://en.wikipedia.org/wiki/A*_search_algorithm' )
@@ -26,7 +27,6 @@ const PROJECT_LIST = [
     [
       new Resource( 'Wikipedia - Chaos Game', 'https://en.wikipedia.org/wiki/Chaos_game' )
     ] ),
-  new Project( "Falling Balls", "Create Ball objects that are affected by physics", "DroppingBalls" ),
   new Project( "Flocking Boids", "A small flocking simulation that implements Craig Reynold's flocking behavior",
     "FlockingBoids",
     [
@@ -41,5 +41,4 @@ const PROJECT_LIST = [
   new Project( "Physics Objects", "Project to create a libray of objects that use physics.", "PhysicsObjects" ),
   new Project( "User Controlled Object",
     "Project to create a objects that are controlled by the user and affected by physics.", "UserCtrlObj" ),
-
 ]

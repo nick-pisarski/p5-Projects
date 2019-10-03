@@ -75,7 +75,7 @@ div.header-link:hover {
 }
 
 /* Main Page */
-.main {
+#main {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -166,9 +166,6 @@ canvas {
   font-size: 0.75em;
 }
 
-#project > div {
-  width: 800px;
-  height: 600px;
-  background-color: black;
-  color: dimgray;
+canvas {
+  margin: 0px;
 }
