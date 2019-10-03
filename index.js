@@ -1,14 +1,10 @@
-const caps = v => v[ 0 ].toUpperCase() + v.slice( 1 );
+createProjectList();
 
-/**
- * Loads list from json
- */
-function getProjectsList() {
-  return PROJECT_LIST;
-}
+function loadProject( project ) {
 
-function getProjectTitle( name ) {
-  return name.split( '-' ).map( caps ).join( ' ' );
+  //Set the Title for project
+  document.getElementById( 'project-title' ).innerHTML = project.title;
+  console.log( project );
 }
 
 /**
@@ -24,9 +20,7 @@ function createProjectListItem( project ) {
   const title = document.createElement( "div" );
   title.classList.add( 'link', 'project-title' );
   title.innerHTML = project.title;
-  // title.addEventListener( "click", _ => loadProject( pro_name ) );
-  title.addEventListener( "click", _ => console.log( project ) );
-
+  title.addEventListener( "click", _ => loadProject( project ) );
   li.append( title );
 
   // Description
@@ -35,9 +29,9 @@ function createProjectListItem( project ) {
   description.innerHTML = project.description;
   li.append( description );
 
-  // Resource - TODO
+  // Resource
   if ( project.resources ) {
-    const links = project.resources.map( r => `<a class="link" target="_blank" href="${r.link}">${r.title}</a>` );
+    const links = project.resources.map( r => `<a class="link" target="_blank" href="${r.url}">${r.title}</a>` );
     const resources = document.createElement( "div" );
     resources.classList.add( 'project-resources' );
     resources.innerHTML = `Resources: ${links.join(', ')}`;
@@ -48,55 +42,12 @@ function createProjectListItem( project ) {
   document.getElementById( 'project-list' ).append( li );
 }
 
-/**
- * Populates the Project List Html
- */
 function createProjectList() {
   const projects = getProjectsList();
   projects.forEach( createProjectListItem );
-  // loadProject( projects[ 0 ] );
+  loadProject( projects[ 0 ] );
 }
 
-/**
- * creates a Scrit Tag with data-project attribute
- * @param {string} src
- * @param {string} project project name
- */
-function createScriptTag( src, project ) {
-  const s = document.createElement( "script" );
-  s.src = src;
-  s.setAttribute( "data-project", project );
-  return s;
-}
-
-/**
- * Removes any script tags with data-project attribute off the dom
- */
-function removeLoadedProjectScripts() {
-  const ps = document.querySelectorAll( "script[data-project]" );
-  ps.forEach( ele => document.body.removeChild( ele ) );
-}
-
-/**
- * Adds all the project script tags to the DOM
- * @param {string} project  project name
- */
-function addProjectScriptTags( project ) {
-
-  const index_script = document.querySelector( 'script[src="index.js"]' );
-  // Load Library script tags, need recursively do this, based on the file
-  //   Look at File API eg window.File and window.FileReader
-
-  // Load main script
-  const main = createScriptTag( `./projects/${project}/${project}.js`, project );
-  document.body.insertBefore( main, index_script );
-
-}
-
-/**
- * Adds all the project html onto the DOM
- * @param {string} project  project name
- */
 async function addProjectHTML( project ) {
   const path = `./projects/${project}/${project}.html`
   await fetch( path )
@@ -111,14 +62,6 @@ function clearProjectHTML() {
   }
 }
 
-function loadProject( project ) {
-  if ( !document.querySelector( `script[data-project="${project}"]` ) ) {
-    removeLoadedProjectScripts();
-    clearProjectHTML();
-
-    addProjectScriptTags( project );
-    addProjectHTML( project )
-  }
+function getProjectsList() {
+  return PROJECT_LIST;
 }
-
-createProjectList();
