@@ -1,4 +1,4 @@
-const LOAD_FIRST = 5;
+const LOAD_FIRST = 0;
 
 class App {
   constructor() {
