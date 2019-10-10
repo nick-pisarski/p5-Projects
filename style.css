@@ -169,3 +169,36 @@ canvas {
 canvas {
   margin: 0px;
 }
+
+/* Chaos Game */
+.chaos.control-container {
+  color: black;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.chaos.control-container h3 {
+  width: 100%;
+  margin: 4px;
+}
+
+.control-container .slider-container {
+  display: flex;
+  width: 50%;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.control-container .slider-container span {
+  padding: 5px;
+}
+
+.control-container .slider-container span.label {
+  width: 33%;
+}
+
+.control-container .slider-container input {
+  width: 33%;
+}

@@ -1,3 +1,34 @@
+class ShapeCreator {
+  constructor( p5 ) {
+    this.p5 = p5;
+  }
+
+  createShapeVertices( sides ) {
+    const shape = [];
+    const r = ( this.p5.min( this.p5.height, this.p5.width ) / 2 ) - 10;
+    const cx = this.p5.width / 2;
+    const cy = this.p5.height / 2;
+
+    const rotation = this.p5.TWO_PI / sides;
+    let angle = 0
+
+    for ( let i = 0; i < sides; i++ ) {
+      const point = {
+        x: cx + r * this.p5.cos( angle ),
+        y: cy + r * this.p5.sin( angle )
+      }
+      shape.push( point );
+
+      angle += rotation;
+    }
+
+    return shape;
+  }
+
+}
+
+/************************************************************************/
+
 class Curve {
   constructor( strokeWeight = 1, strokeColor, ) {
     this.path = [];

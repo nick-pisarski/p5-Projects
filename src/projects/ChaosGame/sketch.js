@@ -1,129 +1,140 @@
-// Window - window is always a square
-const HEIGHT = 800;
-const WIDTH = HEIGHT;
+app.sketch = ( p ) => {
 
-// config
-const DISPLAY_SEED_PTS = false;
-let MAX_FRAMES = 500;
-let CYCLES_PER_FRAME = 500;
-let LERP_FACTOR = 0.5;
-let SHAPE_SIDES = 5;
-let POINT_SIZE = 1;
+  // Window - window is always a square
+  const HEIGHT = 800;
+  const WIDTH = HEIGHT;
 
-let cycle = 0;
-const seedPoints = [];
-let rx, ry;
-let shape;
-let lastR;
+  // config
+  const DISPLAY_SEED_PTS = false;
+  let MAX_FRAMES = 500;
+  let CYCLES_PER_FRAME = 500;
+  let LERP_FACTOR = 0.5;
+  let SHAPE_SIDES = 5;
+  let POINT_SIZE = 1;
 
-function setup() {
-  const canvas = createCanvas( HEIGHT, WIDTH );
-  canvas.parent( 'sketch' );
-  shape = createShapeVertices( SHAPE_SIDES );
-  createPoints( shape );
+  let cycle = 0;
+  let seedPoints = [];
+  let rx, ry;
+  let lastR;
 
-  // Create HTML Elements
-  createControls()
+  let numSidesSlider;
+  let lerpFactorSlider;
+  let cyclesPerFrameSlider;
+  let framesBeforeRestartSlider;
 
-}
+  let shapeCreator;
 
-function draw() {
+  p.setup = function () {
+    p.createCanvas( HEIGHT, WIDTH );
 
-  // reset and draw a new one
-  if ( cycle == MAX_FRAMES ) {
+    shapeCreator = new ShapeCreator( p );
+    set( SHAPE_SIDES );
+    createControls();
+  }
+
+  p.draw = function () {
+    // reset and draw a new one
+    if ( cycle == framesBeforeRestartSlider.value() ) {
+      set( numSidesSlider.value() );
+    }
+    const cpf = cyclesPerFrameSlider.value();
+    for ( let i = 0; i < cpf; i++ ) {
+      let r = p.floor( p.random( seedPoints.length ) );
+      while ( r == lastR ) {
+        r = p.floor( p.random( seedPoints.length ) );
+      }
+      lastR = r;
+
+      const pnt = seedPoints[ r ];
+      const lf = lerpFactorSlider.value();
+      rx = p.lerp( rx, pnt.x, lf );
+      ry = p.lerp( ry, pnt.y, lf );
+      p.stroke( pnt.c );
+      p.point( rx, ry );
+    }
+
+    cycle++;
+  }
+
+  set = function ( sides ) {
+    const shape = shapeCreator.createShapeVertices( sides );
     createPoints( shape );
+    // createRandomPoints( 5 );
     cycle = 0;
   }
 
-  for ( let i = 0; i < CYCLES_PER_FRAME; i++ ) {
+  createPoints = function ( shape ) {
+    p.background( 0 );
+    p.stroke( 255 );
+    p.strokeWeight( POINT_SIZE );
 
-    let r = floor( random( seedPoints.length ) );
-    while ( r == lastR ) {
-      r = floor( random( seedPoints.length ) );
+    seedPoints = [];
+
+    for ( let i = 0; i < shape.length; i++ ) {
+      const x = shape[ i ].x;
+      const y = shape[ i ].y;
+      const c = p.color( p.random( 255 ), p.random( 255 ), p.random( 255 ) );
+      seedPoints[ i ] = { x, y, c }
+      if ( DISPLAY_SEED_PTS ) {
+        p.strokeWeight( c );
+        p.point( x, y );
+      }
+
     }
-    lastR = r;
-
-    const p = seedPoints[ r ];
-    rx = lerp( rx, p.x, LERP_FACTOR );
-    ry = lerp( ry, p.y, LERP_FACTOR );
-    stroke( p.c );
-    point( rx, ry );
+    rx = p.random( p.width );
+    ry = p.random( p.height );
   }
 
-  cycle++;
-}
-
-function createPoints( shape ) {
-  background( 0 );
-  stroke( 255 );
-  strokeWeight( POINT_SIZE );
-
-  for ( let i = 0; i < shape.length; i++ ) {
-    const x = shape[ i ].x;
-    const y = shape[ i ].y;
-    const c = color( random( 255 ), random( 255 ), random( 255 ) );
-    // const c = color(255, 255, 255);
-    seedPoints[ i ] = { x, y, c }
-    if ( DISPLAY_SEED_PTS ) {
-      strokeWeight( c );
-      point( x, y );
+  createRandomPoints = function ( vertices ) {
+    p.background( 0 )
+    for ( let i = 0; i < vertices; i++ ) {
+      const x = p.random( p.width );
+      const y = p.random( p.height );
+      const c = p.color( p.random( 255 ), p.random( 255 ), p.random( 255 ) );
+      seedPoints[ i ] = { x, y, c }
+      p.strokeWeight( c );
+      p.point( x, y );
     }
 
-  }
-  rx = random( width );
-  ry = random( height );
-}
-
-function createRandomPoints( vertices ) {
-  background( 0 )
-  for ( let i = 0; i < vertices; i++ ) {
-    const x = random( width );
-    const y = random( height );
-    const c = color( random( 255 ), random( 255 ), random( 255 ) );
-    seedPoints[ i ] = { x, y, c }
-    strokeWeight( c );
-    point( x, y );
+    rx = p.random( p.width );
+    ry = p.random( p.height );
   }
 
-  rx = random( width );
-  ry = random( height );
-}
+  createControls = function () {
+    const container = p.createElement( 'div' );
+    container.class( 'chaos control-container' );
+    container.style( 'width', `${WIDTH}px` );
 
-function createControls() {
-  const container = createElement( 'div' );
-  container.class( 'control-container' );
-  container.position( 0, height );
-  container.style( 'width', `${WIDTH}px` );
+    numSidesSlider = makeSliderGroup( container, 'Start Points: ', 3, 10, SHAPE_SIDES, 1 );
 
-  // const title = createElement('h3', 'Controls: ');
-  // title.parent(container);
+    lerpFactorSlider = makeSliderGroup( container, 'Lerp Factor: ', 0.1, 1, LERP_FACTOR, 0.1 );
 
-  const numSides = makeSliderGroup( 'Start Points: ', 3, 10, SHAPE_SIDES, 1 );
-  numSides.parent( container );
+    cyclesPerFrameSlider = makeSliderGroup( container, 'Cycles Per Frame: ', 50, 500, CYCLES_PER_FRAME, 50 );
 
-  const lerpFactor = makeSliderGroup( 'Lerp Factor: ', 0.1, 1, LERP_FACTOR, 0.1 );
-  lerpFactor.parent( container );
+    framesBeforeRestartSlider = makeSliderGroup( container, 'Frames Before Restart: ', 50, 500, MAX_FRAMES, 50 );
 
-  const cyclesPerFrame = makeSliderGroup( 'Cycles Per Frame: ', 50, 500, CYCLES_PER_FRAME, 50 );
-  cyclesPerFrame.parent( container );
+  }
 
-  const framesBeforeRestart = makeSliderGroup( 'Frames Before Restart: ', 50, 500, MAX_FRAMES, 50 );
-  framesBeforeRestart.parent( container );
+  makeSliderGroup = function ( parent, label, min, max, value, step ) {
+    const container = p.createDiv();
+    container.class( 'slider-container' );
 
-}
+    const lbl = p.createSpan( label );
+    lbl.class( 'label' );
+    lbl.parent( container );
+    const slider = p.createSlider( min, max, value, step );
+    const val = p.createSpan( `(${value})` );
 
-function makeSliderGroup( label, min, max, value, step ) {
-  const container = createDiv();
-  container.class( 'slider-container' );
+    slider.mouseReleased( _ => {
+      val.html( `(${slider.value()})` );
+      set( slider.value() );
+    } )
+    slider.parent( container );
 
-  const lbl = createSpan( label );
-  lbl.class( 'label' );
-  lbl.parent( container );
-  const slider = createSlider( min, max, value, step );
-  slider.parent( container );
+    val.parent( container );
 
-  const val = createSpan( `(${value})` );
-  val.parent( container );
+    container.parent( parent );
+    return slider;
+  }
 
-  return container
 }
