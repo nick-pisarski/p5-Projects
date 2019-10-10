@@ -98,8 +98,14 @@ div.header-link:hover {
 }
 
 .project-container {
+  max-width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
+#project {
+  margin-bottom: 25px;
 }
 
 @media screen and (max-width: 1300px) {
@@ -118,6 +124,7 @@ div.header-link:hover {
   background-color: var(--color-sand);
   color: var(--color-blackboard);
 }
+
 
 /* Canvas */
 canvas {
@@ -183,7 +190,7 @@ canvas {
   margin: 4px;
 }
 
-.control-container .slider-container {
+.chaos.control-container .slider-container {
   display: flex;
   width: 50%;
   flex-direction: row;
@@ -191,14 +198,14 @@ canvas {
   align-items: center;
 }
 
-.control-container .slider-container span {
+.chaos.control-container .slider-container span {
   padding: 5px;
 }
 
-.control-container .slider-container span.label {
+.chaos.control-container .slider-container span.label {
   width: 33%;
 }
 
-.control-container .slider-container input {
+.chaos.control-container .slider-container input {
   width: 33%;
 }

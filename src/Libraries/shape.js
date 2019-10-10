@@ -25,15 +25,43 @@ class ShapeCreator {
     return shape;
   }
 
+  drawCircle( x, y, d ) {
+    this.p5.stroke( 'rgba(255,255,255,0.25)' )
+    this.p5.strokeWeight( 1 )
+    this.p5.noFill()
+    this.p5.ellipse( x, y, d, d );
+  }
+
+  drawSquare( x, y, size ) {
+    this.p5.stroke( 'rgba(255,255,255,0.25)' )
+    this.p5.strokeWeight( 1 );
+    this.p5.noFill();
+    this.p5.rectMode( CENTER );
+    this.p5.rect( x, y, size, size )
+  }
+
+  drawPoint( x, y ) {
+    this.p5.stroke( 0, 255, 0 )
+    this.p5.strokeWeight( 6 );
+    this.p5.point( x, y );
+  }
+
+  drawLine( x1, y1, x2, y2 ) {
+    this.p5.stroke( 'rgba(255,255,255,0.1)' )
+    this.p5.strokeWeight( 2 );
+    this.p5.line( x1, y1, x2, y2 );
+  }
+
 }
 
 /************************************************************************/
 
 class Curve {
-  constructor( strokeWeight = 1, strokeColor, ) {
+  constructor( p5, strokeWeight = 1, strokeColor, ) {
+    this.p5 = p5;
     this.path = [];
-    this.current = createVector();
-    this.color = strokeColor || color( random( 255 ), random( 255 ), random( 255 ) );
+    this.current = this.p5.createVector();
+    this.color = strokeColor || this.p5.color( this.p5.random( 255 ), this.p5.random( 255 ), this.p5.random( 255 ) );
     this.strokeWeight = strokeWeight;
   }
 
@@ -54,22 +82,22 @@ class Curve {
   }
 
   drawCurrentPoint() {
-    stroke( 255 );
-    strokeWeight( 5 );
-    point( this.current.x, this.current.y );
+    this.p5.stroke( 255 );
+    this.p5.strokeWeight( 5 );
+    this.p5.point( this.current.x, this.current.y );
 
-    this.current = createVector();
+    this.current = this.p5.createVector();
   }
 
   draw() {
-    stroke( this.color );
-    strokeWeight( this.strokeWeight );
-    noFill();
-    beginShape();
+    this.p5.stroke( this.color );
+    this.p5.strokeWeight( this.strokeWeight );
+    this.p5.noFill();
+    this.p5.beginShape();
     for ( let i = 0; i < this.path.length; i++ ) {
-      vertex( this.path[ i ].x, this.path[ i ].y )
+      this.p5.vertex( this.path[ i ].x, this.path[ i ].y )
     }
-    endShape();
+    this.p5.endShape();
 
     this.drawCurrentPoint();
 

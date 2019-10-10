@@ -35,7 +35,7 @@ const PROJECT_LIST = [
       new Resource( 'Wikipedia - Flocking Behavior', 'https://en.wikipedia.org/wiki/Flocking_(behavior)' ),
       new Resource( 'Craig Reynold\'s flocking behavior', 'http://www.red3d.com/cwr/boids/' )
     ] ),
-  new ProjectItem( "Lissajous Curves *", "A recreation of the Lissajous Curve Table", "LissajousCurve",
+  new ProjectItem( "Lissajous Curves * - DONE", "A recreation of the Lissajous Curve Table", "LissajousCurve",
     [
       new Resource( 'Wikipedia - Lissajous', 'https://en.wikipedia.org/wiki/Lissajous_curve' )
     ] ),

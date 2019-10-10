@@ -35,7 +35,7 @@ app.sketch = ( p ) => {
   p.draw = function () {
     // reset and draw a new one
     if ( cycle == framesBeforeRestartSlider.value() ) {
-      set( numSidesSlider.value() );
+      set();
     }
     const cpf = cyclesPerFrameSlider.value();
     for ( let i = 0; i < cpf; i++ ) {
@@ -57,7 +57,8 @@ app.sketch = ( p ) => {
   }
 
   set = function ( sides ) {
-    const shape = shapeCreator.createShapeVertices( sides );
+    const shape = sides ? shapeCreator.createShapeVertices( sides ) :
+      shapeCreator.createShapeVertices( numSidesSlider.value() );
     createPoints( shape );
     // createRandomPoints( 5 );
     cycle = 0;
@@ -127,8 +128,8 @@ app.sketch = ( p ) => {
 
     slider.mouseReleased( _ => {
       val.html( `(${slider.value()})` );
-      set( slider.value() );
-    } )
+      set();
+    } );
     slider.parent( container );
 
     val.parent( container );

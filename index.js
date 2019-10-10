@@ -1,3 +1,5 @@
+const LOAD_FIRST = 5;
+
 class App {
   constructor() {
     this.sketch = null;
@@ -17,7 +19,7 @@ class App {
 
     this.clearProjectHTML();
 
-    //load sketch folder
+    //load sketch file
     this.createScriptTag( project, `src/projects/${project.folder}/sketch.js` );
   }
 
@@ -84,7 +86,7 @@ class App {
     // const sortedList = this.projectList.sort( ( a, b ) => ( a.title > b.title ) ? 1 : -1 );
     // sortedList.forEach( this.createProjectListItem );
     this.projectList.forEach( this.createProjectListItem );
-    this.loadProject( this.projectList[ 3 ] );
+    this.loadProject( this.projectList[ LOAD_FIRST ] );
   }
 
   clearProjectHTML() {
