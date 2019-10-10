@@ -1,0 +1,19 @@
+{
+  "name": "p5-projects",
+  "version": "1.0.0",
+  "description": "Some random fun projects using th [P5.js](https://p5js.org/) library.",
+  "main": "index.js",
+  "scripts": {
+    "start": "browser-sync start --server -f -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nick-pisarski/p5-Projects.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nick-pisarski/p5-Projects/issues"
+  },
+  "homepage": "https://github.com/nick-pisarski/p5-Projects#readme"
+}
